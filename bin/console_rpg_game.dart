@@ -54,26 +54,36 @@ class Game {
   }
 
   void loadCharacterStats() async {
+    int hp = 0;
+    int attack = 0;
+    int defense = 0;
+
     try {
       final characterFile = File('characters.txt');
       final lines = await characterFile.readAsLines();
+      if (lines.isEmpty) throw FormatException('Please add the character file!');
+
       final stats = lines.first.split(',');
       if (stats.length != 3) throw FormatException('Invalid character data');
 
-      int hp = int.parse(stats[0]);
-      int attack = int.parse(stats[1]);
-      int defense = int.parse(stats[2]);
-
-      String name = getCharacterName();
-
-      character = Character(name, hp, attack, defense);
+      hp = int.parse(stats[0]);
+      attack = int.parse(stats[1]);
+      defense = int.parse(stats[2]);
     } catch (e) {
       print('캐릭터 데이터를 불러오는 데 실패했습니다: $e');
-      // print('Please add the character file!');
+      return; // 오류 발생 시 함수 종료
     }
+
+      String name = getCharacterName();
+      player = Character(name, hp, attack, defense);
   }
 
   void loadMonsterStats() async {
+        int hp = 0;
+    int attack = 0;
+    int defense = 0;
+
+    try {
     final monsterFile = File('monsters.txt');
     if (await monsterFile.exists()) {
       final lines = await monsterFile.readAsLines();
