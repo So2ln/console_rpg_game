@@ -1,6 +1,9 @@
-import 'dart:io'; // Library to receive user input from the console
-import 'dart:async';
+import 'dart:io';
 import 'dart:math';
+
+import 'package:console_rpg_game/game.dart';
+import 'package:console_rpg_game/utils.dart';
+import 'package:console_rpg_game/file_manager.dart';
 
 Future<void> main() async {
   // create a FileManager instance and preload all data
@@ -16,7 +19,7 @@ Future<void> main() async {
   print('3. If you defeat a monster, you can continue to the next one.');
   print('4. The game ends when you are defeated or all monsters are defeated.');
   print('5. You can save your game result at the end.\n');
-  game.waitForEnter();
+  waitForEnter();
 
   game.startGame();
 }
@@ -217,40 +220,12 @@ class Game {
     Monster monster = allMonsters.removeAt(index);
     return monster;
   }
-
-  String getCharacterName() {
-    while (true) {
-      stdout.write('\n What should I call you? : ');
-      String? inputName = stdin.readLineSync();
-
-      if (inputName == null || inputName.trim().isEmpty) {
-        print('No input detected! Please enter a name.');
-        continue;
-      }
-
-      if (!RegExp(r'^[a-zA-Z가-힣 ]+$').hasMatch(inputName)) {
-        print('Please use only Korean or English letters!');
-        continue;
-      }
-
-      inputName = inputName.trim();
-      print('$inputName!! What a great name! Welcome, $inputName!\n');
-
-      return inputName;
-    }
-  }
-
-  void waitForEnter() {
-    // Wait for the user to press Enter
-    stdout.write('(>>> press Enter to continue...)');
-    stdin.readLineSync();
-  }
 }
 
 /// //////////////////////////////////////////////////////////
 /// Abstract class definition
 
-class GameObject {
+abstract class GameObject {
   String name;
   int hp;
   int attack;
