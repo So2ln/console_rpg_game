@@ -18,10 +18,16 @@ class Game {
     String characterName =
         getCharacterName(); // Call the method to get character name
 
+    int health = fileManager.characterStats[0];
+
+    // 30% chance to get a health boost
+    if (Random().nextDouble() < 0.3) {
+      health += 10;
+    }
     player = Character(
       characterName, //name
       // Use the stats loaded from the file
-      fileManager.characterStats[0], // hp
+      health, // hp
       fileManager.characterStats[1], // attack
       fileManager.characterStats[2], // defense
     );
