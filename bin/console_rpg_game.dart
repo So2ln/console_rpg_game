@@ -9,7 +9,7 @@ Future<void> main() async {
 
   // create a Game object using the loaded data
   Game game = Game(fileManager);
-  game.getCharacterName();
+  game.startGame();
 }
 
 /// //////////////////////////////////////////////////////////
@@ -109,10 +109,13 @@ class Game {
       print('2. Exit game');
       stdout.write('Choose an option: ');
       String? choice = stdin.readLineSync();
-      if (choice != '1' || choice != '2') {
-        print('Invalid input! Please enter a valid option.');
+      // Check if the input is null or empty
+      if (choice == null || choice.isEmpty) {
+        print('No input detected! Please try again.');
         continue;
-      } else if (choice == '1') {
+      }
+      // Check if the input is a valid choice
+      if (choice == '1') {
         // Start a battle
         battle();
       } else if (choice == '2') {
@@ -120,13 +123,50 @@ class Game {
         print('Exiting the game. Goodbye!');
         break;
       } else {
-        print('Invalid choice! Please try again.');
+        print('Invalid choice! Please enter 1 or 2.');
         continue;
       }
     }
   }
 
-  void battle() {}
+  void battle() {
+    // Get a random monster
+    Monster? monster = getRandomMonster();
+    if (monster == null) {
+      print("There are no more monsters to fight. You won!");
+      print('Total monsters defeated: $killedMonsters');
+      print('Thank you for playing!');
+      return; // Exit if no monsters are available
+    }
+
+    // Show the status of the player and the monster
+    player.showStatus();
+    monster.showStatus();
+
+    // Battle loop
+    while (player.isAlive() && monster.isAlive()) {
+      print("\n--- Battle Status ---");
+      player.showStatus();
+      monster.showStatus();
+      print("--------------------");
+
+      // Check if the input is null or empty
+      // Player's turn to attack
+      player.attackMonster(monster);
+      if (!monster.isAlive()) {
+        killedMonsters++;
+        print('You defeated ${monster.name}!');
+        break; // Exit the loop if the monster is defeated
+      }
+
+      // Monster's turn to attack
+      monster.attackCharacter(player);
+      if (!player.isAlive()) {
+        print('You have been defeated by ${monster.name}!');
+        break; // Exit the loop if the player is defeated
+      }
+    }
+  }
 
   Monster? getRandomMonster() {
     // Check if there are any monsters available
@@ -202,13 +242,10 @@ class GameObject {
   }
 
   /// Method to handle attacking another GameObject
-  /// This method can be overridden by subclasses for specific attack logic
-
   void attacking(GameObject target) {
     // Basic attack logic
-    int damage = max(0, attack - target.defense);
-    target.hp -= damage;
-    print('$name attacks ${target.name} for $damage damage!');
+    print('$name attacks ${target.name}!');
+    target.defending(attack);
   }
 
   bool isAlive() {
