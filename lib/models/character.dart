@@ -23,4 +23,10 @@ class Character extends GameObject {
       print('$name has $hp HP left.');
     }
   }
+
+  void itemBoost(int healthBoost) {
+    hp += healthBoost;
+    print('...\n 힘이 솓는다!!! + $healthBoost HP');
+    print('$name\'s health is now: $hp HP\n');
+  }
 }

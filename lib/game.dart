@@ -97,7 +97,7 @@ class Game {
       print("---------------------");
 
       print("\n${player.name}'s turn!");
-      stdout.write('Choose an action (1: Attack, 2: Defend): ');
+      stdout.write('Choose an action (1: Attack, 2: Defend, 3: Blueberry): ');
       String? input = stdin.readLineSync();
       if (input == null || input.trim().isEmpty) {
         print('No input! Please try again.');
@@ -119,6 +119,10 @@ class Game {
         case 2:
           player.defend(monster);
           break;
+        case 3:
+          player.itemBoost(20); // Boost health by 20
+          break;
+        // Add a case for item boost
         default:
           print('Invalid choice! Please enter 1 or 2.');
           continue;
