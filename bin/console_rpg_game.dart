@@ -9,6 +9,15 @@ Future<void> main() async {
 
   // create a Game object using the loaded data
   Game game = Game(fileManager);
+  // wait for the user to press Enter before starting the game
+  print('Game Rules:');
+  print('1. You will fight against random monsters.');
+  print('2. Choose to attack or defend during your turn.');
+  print('3. If you defeat a monster, you can continue to the next one.');
+  print('4. The game ends when you are defeated or all monsters are defeated.');
+  print('5. You can save your game result at the end.');
+  game.waitForEnter();
+
   game.startGame();
 }
 
@@ -79,6 +88,7 @@ class Game {
   Game(FileManager fileManager) : allMonsters = fileManager.monsters {
     String characterName =
         getCharacterName(); // Call the method to get character name
+
     player = Character(
       characterName, //name
       // Use the stats loaded from the file
@@ -113,11 +123,16 @@ class Game {
 
     stdout.write('Would you like to save the result? (y/n): ');
     String? saveChoice = stdin.readLineSync();
+    var winORlose = player.isAlive() ? 'Win' : 'Lose';
+
     if (saveChoice?.toLowerCase() == 'y') {
       File('result.txt').writeAsStringSync(
-        '${player.name} defeated $killedMonsters monster(s).',
+        'Game Result: You $winORlose !! \n'
+        '${player.name} defeated $killedMonsters monster(s). \n'
+        'Final Stats: HP: ${player.hp}, Attack: ${player.attack}',
       );
-      print('Result saved.');
+
+      print('\n Result saved. \n');
     } else if (saveChoice?.toLowerCase() == 'n') {
       print('Result not saved.');
     } else {
@@ -125,12 +140,13 @@ class Game {
     }
   }
 
-  void battle() {
+  Future battle() async {
     Monster? monster = getRandomMonster();
     if (monster == null) return;
 
     print('\n!!! 야생의 몬스터가 출현하였습니다!!!');
-    print('${monster.name.trim()}');
+    await Future.delayed(Duration(milliseconds: 700));
+    print('${monster.name.trim()} 의 등장!!\n');
 
     while (player.isAlive() && monster.isAlive()) {
       print("\n--- Battle Status ---");
@@ -172,11 +188,18 @@ class Game {
         break;
       }
 
-      print('\n${monster.name}\'s turn');
+      print('\n${monster.name}\'s turn...');
+      waitForEnter();
       monster.attackCharacter(player);
 
       if (!player.isAlive()) {
-        print('You have been defeated by ${monster.name}...');
+        print('\n${monster.name} has defeated you!');
+        print('Game Over!');
+        waitForEnter();
+
+        print('You defeated $killedMonsters monster(s).');
+        print('Final Stats: HP: ${player.hp}, Attack: ${player.attack}');
+        waitForEnter();
         break;
       }
     }
@@ -194,9 +217,9 @@ class Game {
     return monster;
   }
 
-  Future<String> getCharacterName() async {
+  String getCharacterName() {
     while (true) {
-      stdout.write('Enter your character name: ');
+      stdout.write('\n What should I call you? : ');
       String? inputName = stdin.readLineSync();
 
       if (inputName == null || inputName.trim().isEmpty) {
@@ -211,10 +234,15 @@ class Game {
 
       inputName = inputName.trim();
       print('$inputName!! What a great name! Welcome, $inputName!\n');
-      await Future.delayed(Duration(seconds: 1));
 
       return inputName;
     }
+  }
+
+  void waitForEnter() {
+    // Wait for the user to press Enter
+    stdout.write('please press Enter to continue...');
+    stdin.readLineSync();
   }
 }
 
@@ -239,9 +267,11 @@ class GameObject {
     print('$name defends and takes $actualDamage damage.');
   }
 
-  void attacking(GameObject target) {
+  Future<void> attacking(GameObject target) async {
     print('$name attacks ${target.name} for $attack damage.');
+    await Future.delayed(Duration(milliseconds: 500));
     target.defending(attack);
+    await Future.delayed(Duration(milliseconds: 300));
   }
 
   bool isAlive() => hp > 0;
