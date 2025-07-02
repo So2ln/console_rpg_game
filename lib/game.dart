@@ -10,12 +10,14 @@ import 'utils.dart';
 /// RPG Game class definition
 
 class Game {
+  final FileManager fileManager;
   late Character player;
   List<Monster> allMonsters = [];
   int killedMonsters = 0;
   int turnCount = 0;
+  bool itemBoosted = false;
 
-  Game(FileManager fileManager) : allMonsters = fileManager.monsters {
+  Game(this.fileManager) : allMonsters = fileManager.monsters {
     String characterName =
         getCharacterName(); // Call the method to get character name
 
@@ -61,27 +63,19 @@ class Game {
     }
 
     print('\nExiting the game.');
-    print('Total monsters defeated: $killedMonsters');
+    print('Total monsters defeated: $killedMonsters \n');
 
-    stdout.write('Would you like to save the result? (y/n): ');
-    String? saveChoice = stdin.readLineSync();
     var winORlose = player.isAlive() ? 'Win' : 'Lose';
+    fileManager.savingGameResult(winORlose, player, killedMonsters);
 
-    if (saveChoice?.toLowerCase() == 'y') {
-      File('result.txt').writeAsStringSync(
-        'Game Result: You $winORlose !! \n'
-        '${player.name} defeated $killedMonsters monster(s). \n'
-        'Final Stats: HP: ${player.hp}, Attack: ${player.attack}',
-      );
-
-      print('\n Result saved. \n');
-    } else if (saveChoice?.toLowerCase() == 'n') {
-      print('Result not saved.');
-    } else {
-      print('Invalid input! Result not saved.');
-    }
+    print('Thank you for playing!');
+    waitForEnter();
   }
 
+  // battle method to handle the battle logic
+  /// This method handles the battle logic between the player and a monster.
+  /// It manages turns, player actions (attack, defend, use item), and monster actions.
+  /// The battle continues until either the player or the monster is defeated.
   Future battle() async {
     Monster? monster = getRandomMonster();
     if (monster == null) return;
@@ -128,12 +122,23 @@ class Game {
         case 2:
           player.defend(monster);
           break;
+
+        // Blueberry item boost
+        // Every 3 turns, player can use the item to boost health
+        // but can only use it once per monster
         case 3:
-          player.itemBoost(20); // Boost health by 20
+          if (!itemBoosted) {
+            player.itemBoost(10);
+            itemBoosted = true; // Mark item boost as used
+          } else {
+            print('You have already used the item!');
+            print('Please choose again. (1: Attack, 2: Defend)');
+            continue;
+          }
           break;
-        // Add a case for item boost
+
         default:
-          print('Invalid choice! Please enter 1 or 2.');
+          print('Invalid choice! Please enter 1, 2, or 3.');
           continue;
       }
 
@@ -141,6 +146,7 @@ class Game {
         print('\n Yayyy!! You defeated ${monster.name}! ');
         killedMonsters++;
         turnCount = 0; // Reset turn count after defeating a monster
+        itemBoosted = false; // Reset item boost for the next monster
         break;
       }
 

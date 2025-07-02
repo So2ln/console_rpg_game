@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:console_rpg_game/models/character.dart';
+
 import './models/monster.dart';
 
 /// File management class definition
@@ -52,6 +54,29 @@ class FileManager {
       }
     } catch (e) {
       print('Failed to load monster data: $e');
+    }
+  }
+
+  void savingGameResult(
+    String winORlose,
+    Character player,
+    int killedMonsters,
+  ) {
+    stdout.write('Would you like to save the result? (y/n): ');
+    String? saveChoice = stdin.readLineSync();
+
+    if (saveChoice?.toLowerCase() == 'y') {
+      File('result.txt').writeAsStringSync(
+        'Game Result: You $winORlose !! \n'
+        '${player.name} defeated $killedMonsters monster(s). \n'
+        'Final Stats: HP: ${player.hp}, Attack: ${player.attack}',
+      );
+
+      print('\n Result saved. \n');
+    } else if (saveChoice?.toLowerCase() == 'n') {
+      print('Result not saved.');
+    } else {
+      print('Invalid input! Result not saved.');
     }
   }
 }

@@ -19,7 +19,7 @@ class Monster extends GameObject {
     defense += amount;
     print(
       '!!!!!! $name is now more resistant to attacks!! '
-      '      +$amount Defense',
+      '\n      +$amount Defense',
     );
     return defense;
   }
