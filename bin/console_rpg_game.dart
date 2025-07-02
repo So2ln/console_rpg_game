@@ -2,9 +2,71 @@ import 'dart:io'; // Library to receive user input from the console
 import 'dart:async';
 import 'dart:math';
 
-void main() {
+Future<void> main() async {
+  // create a FileManager instance and preload all data
+  FileManager fileManager = FileManager();
+  await fileManager.loadGameData();
+
+  // create a Game object using the loaded data
   Game game = Game();
   game.startGame();
+}
+
+/// //////////////////////////////////////////////////////////
+/// File management class definition
+
+class FileManager {
+  List<int> characterStats =
+      []; // Variable to store character stats (e.g., [50, 10, 5])
+  List<Monster> monsters = []; // List to store the created monster objects
+
+  /// method to load all game data
+  /// (with the details handled in private methods)
+  Future<void> loadGameData() async {
+    // Call the internal function to load stats
+    await _loadCharacterStats();
+    await _loadMonsterStats();
+  }
+
+  // read character file (private method)
+  Future<void> _loadCharacterStats() async {
+    try {
+      final file = File('assets/characters.txt');
+      final content = await file.readAsString();
+      final stats = content.split(',');
+
+      List<int> temporaryList = [];
+
+      for (String statString in stats) {
+        int parsedNum = int.parse(statString);
+
+        temporaryList.add(parsedNum);
+      }
+
+      characterStats = temporaryList;
+    } catch (e) {
+      print('Failed to load character data: $e');
+    }
+  }
+
+  // Read monster file (private method)
+  Future<void> _loadMonsterStats() async {
+    try {
+      final file = File('assets/monsters.txt');
+      final lines = await file.readAsLines();
+
+      for (var line in lines) {
+        final info = line.split(',');
+        String name = info[0];
+        int hp = int.parse(info[1]);
+        int attack = int.parse(info[2]);
+
+        monsters.add(Monster(name, hp, attack));
+      }
+    } catch (e) {
+      print('Failed to load monster data: $e');
+    }
+  }
 }
 
 /// //////////////////////////////////////////////////////////
@@ -15,12 +77,9 @@ class Game {
   List<Monster> allMonsters = [];
   int killedMonsters = 0;
 
-  Game();
+  Game(FileManager fileManager) : all;
 
-  void startGame() {
-    loadCharacterStats();
-    loadMonsterStats();
-  }
+  void startGame() {}
 
   void battle() {}
 
@@ -53,59 +112,6 @@ class Game {
 
       print('$inputName !! 멋진 이름이군요! 환영합니다, $inputName님!');
       return inputName;
-    }
-  }
-
-  void loadCharacterStats() async {
-    int hp = 0;
-    int attack = 0;
-    int defense = 0;
-
-    try {
-      final characterFile = File('assets/characters.txt');
-      final lines = await characterFile.readAsLines();
-      if (lines.isEmpty) {
-        throw FormatException('Please add the character file!');
-      }
-
-      final stats = lines.first.split(',');
-      if (stats.length != 3) throw FormatException('Invalid character data');
-
-      hp = int.parse(stats[0]);
-      attack = int.parse(stats[1]);
-      defense = int.parse(stats[2]);
-    } catch (e) {
-      print('캐릭터 데이터를 불러오는 데 실패했습니다: $e');
-      return; // 오류 발생 시 함수 종료
-    }
-
-    String name = getCharacterName();
-    player = Character(name, hp, attack, defense);
-  }
-
-  void loadMonsterStats() async {
-    String name = '';
-    int hp = 0;
-    int attack = 0;
-    try {
-      final monsterFile = File('assets/monsters.txt');
-      final lines = await monsterFile.readAsLines();
-      if (lines.isEmpty) {
-        throw FormatException('Please add the monster file!');
-      }
-
-      for (var line in lines) {
-        final info = line.split(',');
-        if (info.length != 3) throw FormatException('Invalid character data');
-        name = info[0];
-        hp = int.parse(info[1]);
-        attack = int.parse(info[2]);
-
-        allMonsters.add(Monster(name, hp, attack));
-      }
-    } catch (e) {
-      print('몬스터 데이터를 불러오는 데 실패했습니다: $e');
-      return; // 오류 발생 시 함수 종료
     }
   }
 }
