@@ -23,7 +23,13 @@ class Game {
     // 30% chance to get a health boost
     if (Random().nextDouble() < 0.3) {
       health += 10;
+      print(
+        '\nYou got a health boost! +10 HP'
+        ' (current HP: $health)',
+      );
     }
+
+    // Create the player character with stats loaded from the file
     player = Character(
       characterName, //name
       // Use the stats loaded from the file
