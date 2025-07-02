@@ -48,7 +48,7 @@ class FileManager {
         int hp = int.parse(info[1]);
         int attack = int.parse(info[2]);
 
-        monsters.add(Monster(name, hp, attack));
+        monsters.add(Monster(name, hp, attack, 0));
       }
     } catch (e) {
       print('Failed to load monster data: $e');

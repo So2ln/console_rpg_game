@@ -13,6 +13,7 @@ class Game {
   late Character player;
   List<Monster> allMonsters = [];
   int killedMonsters = 0;
+  int turnCount = 0;
 
   Game(FileManager fileManager) : allMonsters = fileManager.monsters {
     String characterName =
@@ -97,6 +98,14 @@ class Game {
       print("---------------------");
 
       print("\n${player.name}'s turn!");
+      turnCount++;
+      print('Turn: $turnCount');
+      if (turnCount % 3 == 0) {
+        // Every 3 turns, monster increases its defense
+        monster.increaseDefense(2); // Increase defense by 2
+      }
+      print('---------------------');
+
       stdout.write('Choose an action (1: Attack, 2: Defend, 3: Blueberry): ');
       String? input = stdin.readLineSync();
       if (input == null || input.trim().isEmpty) {
@@ -131,6 +140,7 @@ class Game {
       if (!monster.isAlive()) {
         print('\n Yayyy!! You defeated ${monster.name}! ');
         killedMonsters++;
+        turnCount = 0; // Reset turn count after defeating a monster
         break;
       }
 

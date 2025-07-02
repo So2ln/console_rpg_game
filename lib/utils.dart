@@ -1,9 +1,12 @@
 import 'dart:io';
+import 'dart:convert';
 
 String getCharacterName() {
   while (true) {
     stdout.write('\n What should I call you? : ');
-    String? inputName = stdin.readLineSync();
+    String? inputName = stdin.readLineSync(
+      encoding: Encoding.getByName('utf-8')!,
+    );
 
     if (inputName == null || inputName.trim().isEmpty) {
       print('No input detected! Please enter a name.');
