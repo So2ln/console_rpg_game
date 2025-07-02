@@ -15,7 +15,7 @@ Future<void> main() async {
   print('2. Choose to attack or defend during your turn.');
   print('3. If you defeat a monster, you can continue to the next one.');
   print('4. The game ends when you are defeated or all monsters are defeated.');
-  print('5. You can save your game result at the end.');
+  print('5. You can save your game result at the end.\n');
   game.waitForEnter();
 
   game.startGame();
@@ -98,7 +98,7 @@ class Game {
     );
   }
 
-  void startGame() {
+  Future<void> startGame() async {
     print('\n --- Game Start --- \n');
     print('${player.name}, check your stats:');
     print(
@@ -107,7 +107,7 @@ class Game {
 
     // Main game loop
     while (player.isAlive() && allMonsters.isNotEmpty) {
-      battle(); // fight one monster
+      await battle(); // fight one monster
 
       if (!player.isAlive()) break;
 
@@ -146,15 +146,16 @@ class Game {
 
     print('\n!!! 야생의 몬스터가 출현하였습니다!!!');
     await Future.delayed(Duration(milliseconds: 700));
-    print('${monster.name.trim()} 의 등장!!\n');
+    print('\n         ${monster.name.trim()} 의 등장!!\n');
 
     while (player.isAlive() && monster.isAlive()) {
+      waitForEnter();
       print("\n--- Battle Status ---");
       player.showStatus();
       monster.showStatus();
       print("---------------------");
 
-      print("\n${player.name}'s turn");
+      print("\n${player.name}'s turn!");
       stdout.write('Choose an action (1: Attack, 2: Defend): ');
       String? input = stdin.readLineSync();
       if (input == null || input.trim().isEmpty) {
@@ -172,7 +173,7 @@ class Game {
 
       switch (choice) {
         case 1:
-          player.attackMonster(monster);
+          await player.attackMonster(monster);
           break;
         case 2:
           player.defend(monster);
@@ -183,14 +184,14 @@ class Game {
       }
 
       if (!monster.isAlive()) {
-        print('You defeated ${monster.name}!');
+        print('\n Yayyy!! You defeated ${monster.name}! ');
         killedMonsters++;
         break;
       }
 
-      print('\n${monster.name}\'s turn...');
       waitForEnter();
-      monster.attackCharacter(player);
+      print('\n${monster.name}\'s turn...');
+      await monster.attackCharacter(player);
 
       if (!player.isAlive()) {
         print('\n${monster.name} has defeated you!');
@@ -241,7 +242,7 @@ class Game {
 
   void waitForEnter() {
     // Wait for the user to press Enter
-    stdout.write('please press Enter to continue...');
+    stdout.write('(>>> press Enter to continue...)');
     stdin.readLineSync();
   }
 }
@@ -264,7 +265,7 @@ class GameObject {
   void defending(int damage) {
     int actualDamage = max(0, damage - defense);
     hp -= actualDamage;
-    print('$name defends and takes $actualDamage damage.');
+    print('$name takes $actualDamage damage.');
   }
 
   Future<void> attacking(GameObject target) async {
@@ -284,8 +285,8 @@ class Character extends GameObject {
   Character(String name, int hp, int attack, int defense)
     : super(name, hp, attack, defense);
 
-  void attackMonster(Monster monster) {
-    attacking(monster);
+  Future<void> attackMonster(Monster monster) async {
+    await attacking(monster);
     if (!monster.isAlive()) {
       print('${monster.name} has been defeated!');
     }
@@ -309,10 +310,10 @@ class Monster extends GameObject {
   Monster(String name, int hp, int attack)
     : super(name, hp, attack, 0); // Monsters have no defense
 
-  void attackCharacter(Character character) {
-    attacking(character);
+  Future<void> attackCharacter(Character character) async {
+    await attacking(character);
     if (!character.isAlive()) {
-      print('You lose!');
+      print('Oh no!!!!');
     }
   }
 }
