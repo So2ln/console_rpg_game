@@ -74,9 +74,9 @@ class FileManager {
 
       print('\n Result saved. \n');
     } else if (saveChoice?.toLowerCase() == 'n') {
-      print('Result not saved.');
+      print('\n Result not saved.\n');
     } else {
-      print('Invalid input! Result not saved.');
+      print('\n Invalid input! \n Result not saved.\n');
     }
   }
 }
