@@ -23,6 +23,7 @@ class Game {
 
     int health = fileManager.characterStats[0];
 
+
     // 30% chance to get a health boost
     if (Random().nextDouble() < 0.3) {
       health += 10;
@@ -42,6 +43,9 @@ class Game {
     );
   }
 
+  /// Method to start the game
+  /// This method initializes the game, displays the player's stats,
+  /// and enters the main game loop where battles with monsters occur.
   Future<void> startGame() async {
     print('\n --- Game Start --- \n');
     print('${player.name}, check your stats:');
@@ -49,6 +53,7 @@ class Game {
       'HP: ${player.hp}, Attack: ${player.attack}, Defense: ${player.defense}',
     );
 
+// ////////////////////////////////////////////////////////////////////////
     // Main game loop
     while (player.isAlive() && allMonsters.isNotEmpty) {
       await battle(); // fight one monster
@@ -61,8 +66,8 @@ class Game {
         break;
       }
     }
-
-    print('\nExiting the game.');
+// end of the main game loop
+    
     print('Total monsters defeated: $killedMonsters \n');
 
     var winORlose = player.isAlive() ? 'Win' : 'Lose';
@@ -70,8 +75,11 @@ class Game {
 
     print('Thank you for playing!');
     waitForEnter();
+    print('\nExiting the game...\n');
   }
 
+
+// ////////////////////////////////////////////////////////////////////////
   // battle method to handle the battle logic
   /// This method handles the battle logic between the player and a monster.
   /// It manages turns, player actions (attack, defend, use item), and monster actions.
@@ -167,6 +175,11 @@ class Game {
     }
   }
 
+  // ////////////////////////////////////////////////////////////////////
+  /// Method to get a random monster from the list of all monsters.
+  /// If all monsters have been defeated, it returns null and prints a message.
+  /// Returns a [Monster] object or null if no monsters are left.
+
   Monster? getRandomMonster() {
     if (allMonsters.isEmpty) {
       print('All monsters have been defeated!');
@@ -178,4 +191,5 @@ class Game {
     Monster monster = allMonsters.removeAt(index);
     return monster;
   }
+
 }

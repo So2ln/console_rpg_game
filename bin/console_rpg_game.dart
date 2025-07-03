@@ -21,4 +21,6 @@ Future<void> main() async {
   waitForEnter();
 
   game.startGame();
+
+  
 }
