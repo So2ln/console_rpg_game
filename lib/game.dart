@@ -77,9 +77,9 @@ class Game {
     } else {
       print('Oh no, ${player.name}! You were defeated by the monsters.');
     }
-    print('ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ');
-    print('You $winORlose!!');
-    print('ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ');
+    print('\n ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ \n');
+    print('             You $winORlose!!');
+    print('\n ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ \n');
     fileManager.savingGameResult(winORlose, player, killedMonsters);
 
     print('Thank you for playing!');
@@ -167,7 +167,7 @@ class Game {
         // but can only use it once per monster
         case 3:
           if (!itemBoosted) {
-            player.itemBoost(100); // Boost health by 100
+            player.itemBoost(200); // Boost +100 HP and +200 Attack
             itemBoosted = true; // Mark item boost as used
           } else {
             print('You have already used the item!');

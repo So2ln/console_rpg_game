@@ -25,8 +25,14 @@ class Character extends GameObject {
   }
 
   void itemBoost(int healthBoost) {
-    hp += healthBoost;
-    print('...\n you ate blueberries!!! + $healthBoost HP');
-    print('$name\'s health is now: $hp HP\n');
+    hp += healthBoost ~/ 2; // Boost health by half of the healthBoost value
+    attack += healthBoost; // Boost attack as well
+    print(
+      '...\n you ate blueberries!!! + $healthBoost HP / + $healthBoost Attack',
+    );
+    print(
+      '$name\'s health is now: $hp HP\n '
+      '$name\'s attack is now: $attack Attack',
+    );
   }
 }
