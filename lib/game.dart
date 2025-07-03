@@ -2,10 +2,11 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:math';
 
+import 'package:console_rpg_game/skills.dart';
 import './models/character.dart';
 import './models/monster.dart';
-import 'file_manager.dart';
-import 'utils.dart';
+import 'package:console_rpg_game/file_manager.dart';
+import 'package:console_rpg_game/utils.dart';
 
 /// RPG Game class definition
 
@@ -22,7 +23,6 @@ class Game {
         getCharacterName(); // Call the method to get character name
 
     int health = fileManager.characterStats[0];
-
 
     // 30% chance to get a health boost
     if (Random().nextDouble() < 0.3) {
@@ -53,7 +53,7 @@ class Game {
       'HP: ${player.hp}, Attack: ${player.attack}, Defense: ${player.defense}',
     );
 
-// ////////////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////////////
     // Main game loop
     while (player.isAlive() && allMonsters.isNotEmpty) {
       await battle(); // fight one monster
@@ -66,8 +66,8 @@ class Game {
         break;
       }
     }
-// end of the main game loop
-    
+    // end of the main game loop
+
     print('Total monsters defeated: $killedMonsters \n');
 
     var winORlose = player.isAlive() ? 'Win' : 'Lose';
@@ -78,8 +78,7 @@ class Game {
     print('\nExiting the game...\n');
   }
 
-
-// ////////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////////
   // battle method to handle the battle logic
   /// This method handles the battle logic between the player and a monster.
   /// It manages turns, player actions (attack, defend, use item), and monster actions.
@@ -91,6 +90,19 @@ class Game {
     print('\n!!! 야생의 몬스터가 출현하였습니다!!!');
     await Future.delayed(Duration(milliseconds: 700));
     print('\n         ${monster.name.trim()} 의 등장!!\n');
+
+    // Display monster's ASCII art
+    print(monster.asciiArt);
+    waitForEnter();
+    print('\n>> ${monster.name}');
+    print(monster.description);
+    for (var skill in monster.skills) {
+      print('- ${skill.name}: ${skill.description}');
+    }
+    print(
+      'HP: ${monster.hp}, Attack: ${monster.attack}, Defense: ${monster.defense}',
+    );
+    print('----------------------------------------------------------\n');
 
     while (player.isAlive() && monster.isAlive()) {
       waitForEnter();
@@ -108,7 +120,7 @@ class Game {
       }
       print('---------------------');
 
-      stdout.write('Choose an action (1: Attack, 2: Defend, 3: Blueberry): ');
+      stdout.write('Choose an action (1: Attack, 2: Defend, 3: Blueberry)  : ');
       String? input = stdin.readLineSync();
       if (input == null || input.trim().isEmpty) {
         print('No input! Please try again.');
@@ -160,7 +172,42 @@ class Game {
 
       waitForEnter();
       print('\n${monster.name}\'s turn...');
-      await monster.attackCharacter(player);
+
+      // filter available skills
+      List<Skill> availableSkills = monster.skills.where((skill) {
+        // Check if the monster has used its ultimate skill or normal skill
+        bool isUltimate =
+            skill.name.contains('필살기') || skill.name.contains('필살');
+
+        if (isUltimate) {
+          return !monster.hasUsedUltimate;
+        } else {
+          return !monster.hasUsedSkill;
+        }
+      }).toList();
+
+      // 20% chance for monster to use a skill
+      // If monster has skills, it randomly chooses one to use
+      if (monster.skills.isNotEmpty && Random().nextDouble() < 0.2) {
+        final skill = monster.skills[Random().nextInt(monster.skills.length)];
+        print('\n${monster.name} uses skill: ${skill.name}!');
+        print('${skill.description}');
+        await Future.delayed(Duration(milliseconds: 500));
+
+        // 효과 적용!
+        skill.applyTo(player);
+        await Future.delayed(Duration(milliseconds: 500));
+
+        // update monster's skill usage status
+        if (skill.name.contains('필살기') || skill.name.contains('필살')) {
+          monster.hasUsedUltimate = true;
+        } else {
+          monster.hasUsedSkill = true;
+        }
+      } else {
+        // normal monster attack
+        await monster.attackCharacter(player);
+      }
 
       if (!player.isAlive()) {
         print('\n${monster.name} has defeated you!');
@@ -191,5 +238,4 @@ class Game {
     Monster monster = allMonsters.removeAt(index);
     return monster;
   }
-
 }

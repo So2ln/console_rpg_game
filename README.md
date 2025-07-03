@@ -180,17 +180,4 @@ Would you like to save the result? (y/n)
     * 아스키아트 구현
     * 남은 몬스터 보기 기능
 
----
 
-## ✍️ Author
-
-Developed by \[Your Name].
-For educational purposes in Dart OOP & CLI programming.
-
----
-
-## 📌 Notes
-
-* 모든 입력은 유효성 검사를 포함합니다.
-* 게임 로직은 순차적이며, 상태는 전투 간 유지됩니다.
-* 추후 몬스터 스킬 추가, 캐릭터 성장 시스템 등 확장 가능합니다.

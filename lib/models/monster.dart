@@ -1,12 +1,26 @@
 import 'game_object.dart';
 import 'character.dart';
+import '../skills.dart';
 
 /// Monster class definition
 
 class Monster extends GameObject {
-  Monster(String name, int hp, int attack, int defense)
-    : super(name, hp, attack, defense);
-  // : super(name, hp, attack, 0); // Monsters have no defense
+  final String description;
+  final String asciiArt;
+  final List<Skill> skills;
+
+  bool hasUsedSkill = false;
+  bool hasUsedUltimate = false;
+
+  Monster(
+    String name,
+    int hp,
+    int attack,
+    int defense,
+    this.description,
+    this.skills,
+    this.asciiArt,
+  ) : super(name, hp, attack, defense);
 
   Future<void> attackCharacter(Character character) async {
     await attacking(character);
