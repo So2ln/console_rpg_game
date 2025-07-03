@@ -93,11 +93,11 @@ class Game {
     waitForEnter();
 
     print('\n>> ${monster.name}');
-    print(monster.description);
+    print(monster.description.replaceAll(r'\n', '\n'));
     print('- [스킬] ${monster.skill.name}:');
     print('  ${monster.skill.description}');
     print('- [필살기] ${monster.ultimate.name}:');
-    print('  ${monster.ultimate.description}');
+    print('  ${monster.ultimate.description}\n');
     print(
       'HP: ${monster.hp}, Attack: ${monster.attack}, Defense: ${monster.defense}',
     );
@@ -115,7 +115,7 @@ class Game {
       print('Turn: $turnCount');
       if (turnCount % 3 == 0) {
         // Every 3 turns, monster increases its defense
-        monster.increaseDefense(2); // Increase defense by 2
+        monster.increaseDefense(20); // Increase defense by 2
       }
       print('---------------------');
 
@@ -123,6 +123,7 @@ class Game {
       String? input = stdin.readLineSync();
       if (input == null || input.trim().isEmpty) {
         print('No input! Please try again.');
+        turnCount--; // Decrement turn count for no input
         continue;
       }
 
@@ -143,11 +144,11 @@ class Game {
           break;
 
         // Blueberry item boost
-        // Every 3 turns, player can use the item to boost health
+        // player can use the item to boost health
         // but can only use it once per monster
         case 3:
           if (!itemBoosted) {
-            player.itemBoost(10);
+            player.itemBoost(100); // Boost health by 100
             itemBoosted = true; // Mark item boost as used
           } else {
             print('You have already used the item!');
@@ -173,15 +174,15 @@ class Game {
       print('\n${monster.name}\'s turn...');
 
       // Randomly decide whether the monster uses a skill, ultimate, or attacks
-      // 10% chance to use ultimate, 20% chance to use skill, otherwise
+      // 40% chance to use ultimate, 60% chance to use skill, otherwise
       double rand = Random().nextDouble();
 
-      if (rand < 0.1 && !monster.hasUsedUltimate) {
+      if (rand < 0.4 && !monster.hasUsedUltimate) {
         print('\n${monster.name}가 필살기를 사용했다!: ${monster.ultimate.name}!');
         print('${monster.ultimate.description}');
         monster.useUltimateOn(player);
         await Future.delayed(Duration(milliseconds: 500));
-      } else if (rand < 0.3 && !monster.hasUsedSkill) {
+      } else if (rand < 0.6 && !monster.hasUsedSkill) {
         print('\n${monster.name}가 스킬을 사용했다!: ${monster.skill.name}!');
         print('${monster.skill.description}');
         monster.useSkillOn(player);
