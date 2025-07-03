@@ -188,8 +188,8 @@ class Game {
 
       // 20% chance for monster to use a skill
       // If monster has skills, it randomly chooses one to use
-      if (monster.skills.isNotEmpty && Random().nextDouble() < 0.2) {
-        final skill = monster.skills[Random().nextInt(monster.skills.length)];
+      if (availableSkills.isNotEmpty && Random().nextDouble() < 0.2) {
+        final skill = availableSkills[Random().nextInt(availableSkills.length)];
         print('\n${monster.name} uses skill: ${skill.name}!');
         print('${skill.description}');
         await Future.delayed(Duration(milliseconds: 500));
