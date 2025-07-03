@@ -1,3 +1,3 @@
 Game Result: You Win !! 
-히히 defeated 6 monster(s). 
-Final Stats: HP: 1745, Attack: 140
+빵끼 defeated 6 monster(s). 
+Final Stats: HP: 1710, Attack: 170
