@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:console_rpg_game/models/character.dart';
-import 'package:console_rpg_game/skills.dart';
-
+import 'skills/normal_skill.dart';
+import 'skills/ultimate_skill.dart';
 import './models/monster.dart';
 
 /// File management class definition
@@ -51,13 +51,15 @@ class FileManager {
 
         String name = info[0].trim();
         String description = info[1].trim();
-        String skills = info[2].trim();
+        String skillBlock = info[2].trim();
         int attack = int.parse(info[3].trim());
         int hp = int.parse(info[4].trim());
 
-        final skill = _parseSkills(skills);
+        final parsed = _parseSkills(skillBlock);
+        final normalSkill = parsed['normal']!;
+        final ultimateSkill = parsed['ultimate']!;
 
-        // 아스키 파일 불러오기 시도
+        // 아스키 파일 불러오기
         String asciiArt = '';
         final asciiFile = File('assets/ascii/$name.txt');
         try {
@@ -71,9 +73,10 @@ class FileManager {
             name,
             hp,
             attack,
-            0, // defense is set to 0 for now
+            0, //defense is set to 0 for now
             description,
-            skill,
+            normalSkill,
+            ultimateSkill,
             asciiArt,
           ),
         );
@@ -95,63 +98,51 @@ class FileManager {
   /// [스킬] 주머니 뒤적거리기: 주머니에서 동전, 먼지, 구겨진 영수증 같은 걸 꺼내 던진다. (공격력 -5)
   /// [필살기] 소원 들어주기(내맘대로): 상대의 소원을 들어주는 척하며 디버프(방어력 -5)를 건다.
 
-  List<Skill> _parseSkills(String skillBlock) {
-    final List<Skill> skills = [];
+  Map<String, dynamic> _parseSkills(String block) {
+    final skillPattern = RegExp(
+      r'\[스킬\]\s*(.*?):\s*(.*?)\((공격력|방어력|체력)[\s]*[-−](\d+)\)',
+      dotAll: true,
+    );
+    final ultimatePattern = RegExp(
+      r'\[필살기\]\s*(.*?):\s*(.*?)\((공격력|방어력|체력)[\s]*[-−](\d+)\)',
+      dotAll: true,
+    );
 
-    final lines = skillBlock.split('\n');
-    final namePattern = RegExp(r'\[(스킬|필살기)\]\s*(.*?):');
-    final debuffPattern = RegExp(r'\((공격력|방어력|체력)[\s]*[-−](\d+)\)');
+    final skillMatch = skillPattern.firstMatch(block);
+    final ultimateMatch = ultimatePattern.firstMatch(block);
 
-    for (var line in lines) {
-      line = line.trim();
-      if (line.isEmpty) continue;
+    final normal = skillMatch != null
+        ? NormalSkill(
+            skillMatch.group(1)!.trim(),
+            skillMatch.group(2)!.trim(),
+            debuffType: _convertType(skillMatch.group(3)!),
+            debuffValue: int.parse(skillMatch.group(4)!),
+          )
+        : NormalSkill('이름없음', '효과 없음');
 
-      final nameMatch = namePattern.firstMatch(line);
-      final debuffMatch = debuffPattern.firstMatch(line);
+    final ultimate = ultimateMatch != null
+        ? UltimateSkill(
+            ultimateMatch.group(1)!.trim(),
+            ultimateMatch.group(2)!.trim(),
+            debuffType: _convertType(ultimateMatch.group(3)!),
+            debuffValue: int.parse(ultimateMatch.group(4)!),
+          )
+        : UltimateSkill('이름없음', '효과 없음');
 
-      String skillName = '이름없음';
-      String description = '';
+    return {'normal': normal, 'ultimate': ultimate};
+  }
 
-      if (nameMatch != null) {
-        skillName = nameMatch.group(2)!.trim();
-        description = line.substring(nameMatch.end).trim();
-      } else {
-        description = line;
-      }
-
-      String? debuffType;
-      int? debuffValue;
-
-      if (debuffMatch != null) {
-        final type = debuffMatch.group(1);
-        final value = int.parse(debuffMatch.group(2)!);
-
-        switch (type) {
-          case '공격력':
-            debuffType = 'attack';
-            break;
-          case '방어력':
-            debuffType = 'defense';
-            break;
-          case '체력':
-            debuffType = 'hp';
-            break;
-        }
-
-        debuffValue = value;
-      }
-
-      skills.add(
-        Skill(
-          skillName,
-          description,
-          debuffType: debuffType,
-          debuffValue: debuffValue,
-        ),
-      );
+  String _convertType(String korean) {
+    switch (korean) {
+      case '공격력':
+        return 'attack';
+      case '방어력':
+        return 'defense';
+      case '체력':
+        return 'hp';
+      default:
+        return '';
     }
-
-    return skills;
   }
 
   // //////////////////////////////////////////////////////////////////////
