@@ -1,6 +1,6 @@
 import 'game_object.dart';
 import 'character.dart';
-import 'package:console_rpg_game/skills/skill_base.dart';
+
 import 'package:console_rpg_game/skills/normal_skill.dart';
 import 'package:console_rpg_game/skills/ultimate_skill.dart';
 

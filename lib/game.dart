@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:math';
 
-import 'skills/normal_skill.dart';
 import './models/character.dart';
 import './models/monster.dart';
 import 'package:console_rpg_game/file_manager.dart';
