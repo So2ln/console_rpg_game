@@ -162,21 +162,29 @@ class FileManager {
     Character player,
     int killedMonsters,
   ) {
-    stdout.write('Would you like to save the result? (y/n): ');
-    String? saveChoice = stdin.readLineSync();
+    String? saveChoice;
 
-    if (saveChoice?.toLowerCase() == 'y') {
-      File('result.txt').writeAsStringSync(
-        'Game Result: You $winORlose !! \n'
-        '${player.name} defeated $killedMonsters monster(s). \n'
-        'Final Stats: HP: ${player.hp}, Attack: ${player.attack}',
-      );
+    while (true) {
+      stdout.write('Would you like to save the result? (y/n): ');
+      saveChoice = stdin.readLineSync();
 
-      print('\n Result saved. \n');
-    } else if (saveChoice?.toLowerCase() == 'n') {
-      print('\n Result not saved.\n');
-    } else {
-      print('\n Invalid input! \n Result not saved.\n');
+      if (saveChoice != null) {
+        final choice = saveChoice.toLowerCase();
+        if (choice == 'y') {
+          File('result.txt').writeAsStringSync(
+            'Game Result: You $winORlose !! \n'
+            '${player.name} defeated $killedMonsters monster(s). \n'
+            'Final Stats: HP: ${player.hp}, Attack: ${player.attack}',
+          );
+          print('\n Result saved. \n');
+          break;
+        } else if (choice == 'n') {
+          print('\n Result not saved.\n');
+          break;
+        }
+      }
+
+      print('Invalid input! Please enter "y" or "n".');
     }
   }
 }

@@ -55,19 +55,31 @@ class Game {
     // Main game loop
     while (player.isAlive() && allMonsters.isNotEmpty) {
       await battle(); // fight one monster
+      String? continueChoice;
+      while (true) {
+        stdout.write('\nWould you like to fight the next monster? (y/n): ');
+        continueChoice = stdin.readLineSync()?.toLowerCase();
 
-      if (!player.isAlive()) break;
-
-      stdout.write('\nWould you like to fight the next monster? (y/n): ');
-      String? continueChoice = stdin.readLineSync();
-      if (continueChoice?.toLowerCase() != 'y') {
-        break;
+        if (continueChoice == 'y' || continueChoice == 'n') break;
+        print('Invalid input. Please enter "y" or "n".');
       }
+
+      if (continueChoice == 'n') break;
     }
+
     // end of the main game loop
 
     print('Total monsters defeated: $killedMonsters \n');
+
     var winORlose = player.isAlive() ? 'Win' : 'Lose';
+    if (player.isAlive()) {
+      print('Congratulations, ${player.name}! You defeated all monsters!');
+    } else {
+      print('Oh no, ${player.name}! You were defeated by the monsters.');
+    }
+    print('ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ');
+    print('You $winORlose!!');
+    print('ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ ጿ ኈ ቼ ዽ');
     fileManager.savingGameResult(winORlose, player, killedMonsters);
 
     print('Thank you for playing!');
@@ -95,9 +107,9 @@ class Game {
     print('\n>> ${monster.name}');
     print(monster.description.replaceAll(r'\n', '\n'));
     print('- [스킬] ${monster.skill.name}:');
-    print('  ${monster.skill.description}');
+    print('  ${monster.skill.description.replaceAll(r'\n', '\n')}');
     print('- [필살기] ${monster.ultimate.name}:');
-    print('  ${monster.ultimate.description}\n');
+    print('  ${monster.ultimate.description.replaceAll(r'\n', '\n')}\n');
     print(
       'HP: ${monster.hp}, Attack: ${monster.attack}, Defense: ${monster.defense}',
     );
@@ -119,20 +131,27 @@ class Game {
       }
       print('---------------------');
 
-      stdout.write('Choose an action (1: Attack, 2: Defend, 3: Blueberry)  : ');
-      String? input = stdin.readLineSync();
-      if (input == null || input.trim().isEmpty) {
-        print('No input! Please try again.');
-        turnCount--; // Decrement turn count for no input
-        continue;
-      }
-
       int choice;
-      try {
-        choice = int.parse(input.trim());
-      } catch (e) {
-        print('Invalid input! Please enter 1, 2, or 3.');
-        continue;
+
+      while (true) {
+        stdout.write('Choose an action (1: Attack, 2: Defend, 3: Blueberry): ');
+        String? input = stdin.readLineSync();
+
+        if (input == null || input.trim().isEmpty) {
+          print('No input! Please try again.');
+          continue;
+        }
+
+        try {
+          choice = int.parse(input.trim());
+          if (choice < 1 || choice > 3) {
+            print('Invalid input! Please enter 1, 2, or 3.');
+            continue;
+          }
+          break; // 유효한 입력이면 반복 종료
+        } catch (e) {
+          print('Invalid input! Please enter a number.');
+        }
       }
 
       switch (choice) {
