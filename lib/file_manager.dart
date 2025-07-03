@@ -51,13 +51,13 @@ class FileManager {
 
         String name = info[0].trim();
         String description = info[1].trim();
-        String skillBlock = info[2].trim();
-        int attack = int.parse(info[3].trim());
-        int hp = int.parse(info[4].trim());
+        String normalSkillBlock = info[2].trim();
+        String ultimateSkillBlock = info[3].trim();
+        int attack = int.parse(info[4].trim());
+        int hp = int.parse(info[5].trim());
 
-        final parsed = _parseSkills(skillBlock);
-        final normalSkill = parsed['normal']!;
-        final ultimateSkill = parsed['ultimate']!;
+        final normalSkill = _parseNormalSkill(normalSkillBlock);
+        final ultimateSkill = _parseUltimateSkill(ultimateSkillBlock);
 
         // 아스키 파일 불러오기
         String asciiArt = '';
@@ -98,40 +98,49 @@ class FileManager {
   /// [스킬] 주머니 뒤적거리기: 주머니에서 동전, 먼지, 구겨진 영수증 같은 걸 꺼내 던진다. (공격력 -5)
   /// [필살기] 소원 들어주기(내맘대로): 상대의 소원을 들어주는 척하며 디버프(방어력 -5)를 건다.
 
-  Map<String, dynamic> _parseSkills(String block) {
+  // 1. Parse the normal skill block string and return a NormalSkill object.
+  NormalSkill _parseNormalSkill(String block) {
     final skillPattern = RegExp(
       r'\[스킬\]\s*(.*?):\s*(.*?)\((공격력|방어력|체력)[\s]*[-−](\d+)\)',
       dotAll: true,
     );
+
+    final match = skillPattern.firstMatch(block);
+    if (match == null) {
+      // 파싱 실패 시 기본값 반환
+      return NormalSkill('이름없음', '효과 없음');
+    }
+
+    return NormalSkill(
+      match.group(1)!.trim(), // 스킬 이름
+      match.group(2)!.trim(), // 설명
+      debuffType: _convertType(match.group(3)!),
+      debuffValue: int.parse(match.group(4)!),
+    );
+  }
+
+  // 2. Parse the ultimate skill block string and return an UltimateSkill object.
+  UltimateSkill _parseUltimateSkill(String block) {
     final ultimatePattern = RegExp(
       r'\[필살기\]\s*(.*?):\s*(.*?)\((공격력|방어력|체력)[\s]*[-−](\d+)\)',
       dotAll: true,
     );
 
-    final skillMatch = skillPattern.firstMatch(block);
-    final ultimateMatch = ultimatePattern.firstMatch(block);
+    final match = ultimatePattern.firstMatch(block);
+    if (match == null) {
+      // 파싱 실패 시 기본값 반환
+      return UltimateSkill('이름없음', '효과 없음');
+    }
 
-    final normal = skillMatch != null
-        ? NormalSkill(
-            skillMatch.group(1)!.trim(),
-            skillMatch.group(2)!.trim(),
-            debuffType: _convertType(skillMatch.group(3)!),
-            debuffValue: int.parse(skillMatch.group(4)!),
-          )
-        : NormalSkill('이름없음', '효과 없음');
-
-    final ultimate = ultimateMatch != null
-        ? UltimateSkill(
-            ultimateMatch.group(1)!.trim(),
-            ultimateMatch.group(2)!.trim(),
-            debuffType: _convertType(ultimateMatch.group(3)!),
-            debuffValue: int.parse(ultimateMatch.group(4)!),
-          )
-        : UltimateSkill('이름없음', '효과 없음');
-
-    return {'normal': normal, 'ultimate': ultimate};
+    return UltimateSkill(
+      match.group(1)!.trim(), // 필살기 이름
+      match.group(2)!.trim(), // 설명
+      debuffType: _convertType(match.group(3)!),
+      debuffValue: int.parse(match.group(4)!),
+    );
   }
 
+  // 보조 함수
   String _convertType(String korean) {
     switch (korean) {
       case '공격력':
