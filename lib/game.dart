@@ -95,9 +95,14 @@ class Game {
     print(monster.asciiArt);
     waitForEnter();
     print('\n>> ${monster.name}');
-    print(monster.description);
+    print(monster.description.replaceAll(r'\n', '\n'));
     for (var skill in monster.skills) {
-      print('- ${skill.name}: ${skill.description}');
+      String debuffText = '';
+      if (skill.debuffType != null && skill.debuffValue != null) {
+        debuffText = ' (${skill.debuffType} -${skill.debuffValue})';
+      }
+      print('- ${skill.name}:');
+      print('  ${skill.description.trim()}$debuffText\n');
     }
     print(
       'HP: ${monster.hp}, Attack: ${monster.attack}, Defense: ${monster.defense}',
