@@ -122,16 +122,22 @@ class Game {
     print('- [필살기] ${monster.ultimate.name}:');
     print('  ${monster.ultimate.description.replaceAll(r'\n', '\n')}\n');
     print(
-      'HP: ${monster.hp}, Attack: ${monster.attack}, Defense: ${monster.defense}',
+      '\nHP: ${monster.hp}, Attack: ${monster.attack}, Defense: ${monster.defense}',
     );
-    print('----------------------------------------------------------\n');
+    print(
+      '══════════════════════════════•°• ⚠ •°•════════════════════════════════════\n',
+    );
 
     while (player.isAlive() && monster.isAlive()) {
       waitForEnter();
-      print("\n--- Battle Status ---");
+      print(
+        "\n.｡.:*･ﾟ♡★♡･*:.｡ Battle Status .｡.:*･ﾟ♡★♡･*:.｡ ｡.:*･ﾟ♡★♡･*:.｡ ｡.:*･ﾟ♡★♡･*:.｡ ｡.:*･ﾟ♡★♡",
+      );
       player.showStatus();
       monster.showStatus();
-      print("---------------------");
+      print(
+        ".｡.:*･ﾟ♡★♡･*:.｡ ｡.:*･ﾟ♡★♡･*:.｡ ｡.:*･ﾟ♡★♡･*:.｡ ｡.:*･ﾟ♡★♡･*:.｡ ｡.:*･ﾟ♡★♡･*:.｡ ｡.:*･ﾟ♡★♡",
+      );
 
       print("\n${player.name}'s turn!");
       turnCount++;
@@ -140,7 +146,7 @@ class Game {
         // Every 3 turns, monster increases its defense
         monster.increaseDefense(20); // Increase defense by 2
       }
-      print('---------------------');
+      print('───✱*.｡:｡✱*.:｡✧*.｡✰*.:｡✧*.｡:｡*.｡✱ ───');
 
       int choice;
       bool skipMonsterTurn =

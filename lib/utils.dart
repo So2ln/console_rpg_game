@@ -27,6 +27,7 @@ String getCharacterName() {
 
 void waitForEnter() {
   // Wait for the user to press Enter
-  stdout.write('(>> press Enter to continue..)');
+  //stdout.write('(>> press Enter to continue..)');
+  stdout.write('\n >> 𝓹𝓻𝓮𝓼𝓼 𝓔𝓷𝓽𝓮𝓻 𝓽𝓸 𝓬𝓸𝓷𝓽𝓲𝓷𝓾𝓮.. ');
   stdin.readLineSync();
 }
