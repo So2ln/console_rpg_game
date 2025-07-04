@@ -12,15 +12,15 @@ abstract class SkillBase {
     switch (debuffType) {
       case 'attack':
         target.attack -= debuffValue!;
-        print('${target.name}의 공격력이 ${debuffValue}만큼 감소했습니다!');
+        print('${target.name}의 공격력이 $debuffValue만큼 감소했습니다!');
         break;
       case 'defense':
         target.defense -= debuffValue!;
-        print('${target.name}의 방어력이 ${debuffValue}만큼 감소했습니다!');
+        print('${target.name}의 방어력이 $debuffValue만큼 감소했습니다!');
         break;
       case 'hp':
         target.hp -= debuffValue!;
-        print('${target.name}의 체력이 ${debuffValue}만큼 감소했습니다!');
+        print('${target.name}의 체력이 $debuffValue만큼 감소했습니다!');
         break;
     }
   }
