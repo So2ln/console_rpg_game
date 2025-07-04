@@ -61,8 +61,9 @@ class FileManager {
 
         // 아스키 파일 불러오기
         String asciiArt = '';
-        final asciiFile = File('assets/ascii/$name.txt');
+
         try {
+          final asciiFile = File('assets/ascii/$name.txt');
           asciiArt = await asciiFile.readAsString();
         } catch (e) {
           asciiArt = '(No ASCII art found for $name)';
