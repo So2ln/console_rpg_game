@@ -160,6 +160,8 @@ class Game {
           break;
         case 2:
           player.defend(monster);
+          player.hp +=
+              monster.attack ~/ 2; // Heal half of the monster's attack damage
           break;
 
         // Blueberry item boost
