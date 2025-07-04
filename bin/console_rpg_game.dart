@@ -13,7 +13,7 @@ Future<void> main() async {
   Game game = Game(fileManager);
   // wait for the user to press Enter before starting the game
   print(
-    '✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿\n',
+    '\n \n ✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿\n',
   );
   print('<Game Rules> \n');
   print('1. You will fight against random monsters.');
@@ -22,7 +22,7 @@ Future<void> main() async {
   print('4. The game ends when you are defeated or all monsters are defeated.');
   print('5. You can save your game result at the end.\n');
   print(
-    '✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿ \n',
+    '✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿ ... ✿°•∘ɷ∘•°✿ \n \n',
   );
 
   waitForEnter();

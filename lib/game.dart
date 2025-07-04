@@ -24,9 +24,9 @@ class Game {
 
     // 30% chance to get a health boost
     if (Random().nextDouble() < 0.3) {
-      health += 10;
+      health += 100;
       print(
-        '\nYou got a health boost! +10 HP'
+        '\nYLucky day! You received a bonus health boost: +100 HP'
         ' (current HP: $health)',
       );
     }
@@ -143,6 +143,8 @@ class Game {
       print('---------------------');
 
       int choice;
+      bool skipMonsterTurn =
+          false; // Skip monster's turn if player uses item or defends
 
       while (true) {
         stdout.write('Choose an action (1: Attack, 2: Defend, 3: Blueberry): ');
@@ -173,6 +175,7 @@ class Game {
           player.defend(monster);
           player.hp +=
               monster.attack ~/ 2; // Heal half of the monster's attack damage
+          skipMonsterTurn = true;
           break;
 
         // Blueberry item boost
@@ -182,6 +185,7 @@ class Game {
           if (!itemBoosted) {
             player.itemBoost(200); // Boost +100 HP and +200 Attack
             itemBoosted = true; // Mark item boost as used
+            skipMonsterTurn = true; // Skip monster's turn
           } else {
             print('You have already used the item!');
             print('Please choose again. (1: Attack, 2: Defend)');
@@ -200,6 +204,11 @@ class Game {
         turnCount = 0; // Reset turn count after defeating a monster
         itemBoosted = false; // Reset item boost for the next monster
         break;
+      }
+
+      if (skipMonsterTurn) {
+        print('${monster.name}의 턴을 건너뜁니다.');
+        continue; // Skip monster's turn if player defended or used item
       }
 
       waitForEnter();
