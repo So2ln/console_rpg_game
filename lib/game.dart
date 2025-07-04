@@ -83,6 +83,17 @@ class Game {
     fileManager.savingGameResult(winORlose, player, killedMonsters);
 
     print('Thank you for playing!');
+    print('''
+♡♡ ¸.•°*”˜˜”*°•. ♡♡........
+─▄████▄─▄████▄♡~✿.｡.
+▐▀████████████▌♡~✿.｡.
+▐█▄▓██████████▌♡~✿.｡.
+─▀███████████▀♡~✿.｡.
+───▀███████▀♡~✿.｡.
+─────▀███▀♡~✿.｡.
+───────█♡~✿.｡.
+───────♡~✿.｡.:*♡♡..•°*”˜˜”*°•. ♡♡
+''');
     waitForEnter();
     print('\nExiting the game...\n');
   }
