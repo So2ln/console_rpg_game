@@ -226,12 +226,12 @@ class Game {
 
       if (rand < 0.4 && !monster.hasUsedUltimate) {
         print('\n${monster.name}가 필살기를 사용했다!: ${monster.ultimate.name}!');
-        print('${monster.ultimate.description}');
+        print(monster.ultimate.description);
         monster.useUltimateOn(player);
         await Future.delayed(Duration(milliseconds: 500));
       } else if (rand < 0.6 && !monster.hasUsedSkill) {
         print('\n${monster.name}가 스킬을 사용했다!: ${monster.skill.name}!');
-        print('${monster.skill.description}');
+        print(monster.skill.description);
         monster.useSkillOn(player);
         await Future.delayed(Duration(milliseconds: 500));
       } else {

@@ -4,8 +4,7 @@ import 'monster.dart';
 /// Character class definition
 
 class Character extends GameObject {
-  Character(String name, int hp, int attack, int defense)
-    : super(name, hp, attack, defense);
+  Character(super.name, super.hp, super.attack, super.defense);
 
   Future<void> attackMonster(Monster monster) async {
     await attacking(monster);

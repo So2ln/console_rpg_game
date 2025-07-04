@@ -16,15 +16,15 @@ class Monster extends GameObject {
   bool hasUsedUltimate = false;
 
   Monster(
-    String name,
-    int hp,
-    int attack,
-    int defense,
+    super.name,
+    super.hp,
+    super.attack,
+    super.defense,
     this.description,
     this.skill,
     this.ultimate,
     this.asciiArt,
-  ) : super(name, hp, attack, defense);
+  );
 
   ///////////////////////////////////////////////////////
   /// Method to use a skill on a target character
