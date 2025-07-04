@@ -24,6 +24,7 @@ abstract class GameObject {
   Future<void> attacking(GameObject target) async {
     print('$name attacks ${target.name} for $attack damage.');
     await Future.delayed(Duration(milliseconds: 500));
+    // Apply damage to the target --> 이거 안하면 자꾸 죽어서 넣음 공격하면서 방어하도록
     target.defending(attack);
     await Future.delayed(Duration(milliseconds: 300));
   }
