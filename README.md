@@ -2,6 +2,8 @@
 
 A console-based turn-based RPG game written in **Dart**, featuring file I/O, randomness, OOP design, and gameplay interactivity.
 
+>> Pro tip: Widen your terminal window to fully enjoy the game
+
 ---
 
 ## 📁 Project Structure
