@@ -108,12 +108,12 @@ class Game {
     if (monster == null) return;
 
     print('\n!!! 야생의 몬스터가 출현하였습니다!!!');
-    await Future.delayed(Duration(milliseconds: 700));
+    await Future.delayed(Duration(milliseconds: 500));
     print('\n         ${monster.name.trim()} 의 등장!!\n');
 
     // Display monster's ASCII art
     print(monster.asciiArt);
-    waitForEnter();
+    await Future.delayed(Duration(milliseconds: 700));
 
     print('\n>> ${monster.name}');
     print(monster.description.replaceAll(r'\n', '\n'));
