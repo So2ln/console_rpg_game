@@ -188,4 +188,13 @@ class FileManager {
       print('Invalid input! Please enter "y" or "n".');
     }
   }
+
+  /// 류지훈튜터님 gave me feedback to use this function
+  /// Returns the character's health from the loaded stats.
+  int characterHealth() {
+    if (characterStats.isNotEmpty) {
+      return characterStats[0]; // Assuming the first element is health
+    }
+    return 100; // Default health if stats are not loaded
+  }
 }

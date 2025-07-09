@@ -20,7 +20,11 @@ class Game {
   Game(this.fileManager) : allMonsters = fileManager.monsters {
     String characterName =
         getCharacterName(); // Call the method to get character name
-    int health = fileManager.characterStats[0];
+    ///int health = fileManager.characterStats[0];
+
+    // 류지훈튜터님 gave me feedback to use this function
+    int health = fileManager
+        .characterHealth(); // cuz the original code was not intuitive
 
     // 30% chance to get a health boost
     if (Random().nextDouble() < 0.3) {
